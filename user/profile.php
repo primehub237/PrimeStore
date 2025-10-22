@@ -18,9 +18,13 @@ include '../includes/header.php';
             padding-bottom: 80px;
         }
 
-        .tab-active {
-            color: var(--yellow-secondary);
-            border-bottom: 3px solid var(--yellow-secondary);
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
         }
 
         .profile-card {
@@ -52,28 +56,74 @@ include '../includes/header.php';
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .mobile-tab-bar {
+        /* Sidebar Styles */
+        .sidebar {
             background: white;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            position: sticky;
+            top: 24px;
+            height: fit-content;
+            overflow: hidden;
         }
 
-        .mobile-tab {
+        .sidebar-profile {
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, rgba(234, 179, 8, 0.08) 100%);
+        }
+
+        .profile-avatar {
+            background: linear-gradient(135deg, var(--yellow-primary), var(--yellow-secondary));
+            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+        }
+
+        .sidebar-nav {
+            padding: 16px 0;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            color: #6b7280;
+            font-weight: 600;
             transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
         }
 
-        .mobile-tab.active {
+        .sidebar-item:hover {
+            background: rgba(250, 204, 21, 0.05);
             color: var(--yellow-secondary);
         }
 
-        .mobile-tab.active svg {
-            transform: scale(1.15);
+        .sidebar-item.active {
+            background: linear-gradient(90deg, rgba(250, 204, 21, 0.1) 0%, rgba(234, 179, 8, 0.05) 100%);
+            color: var(--yellow-secondary);
+            border-left-color: var(--yellow-secondary);
         }
 
-        @media (min-width: 768px) {
-            body {
-                padding-bottom: 0;
-            }
+        .sidebar-item svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar-item.active svg {
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            min-height: 600px;
         }
 
         .tab-content {
@@ -90,14 +140,20 @@ include '../includes/header.php';
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .profile-avatar {
-            background: linear-gradient(135deg, var(--yellow-primary), var(--yellow-secondary));
-            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
+        .dashboard-header {
+            background: white;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--yellow-primary), var(--yellow-secondary));
             transition: all 0.3s ease;
+            border: none;
+            color: #1f2937;
         }
 
         .btn-primary:hover {
@@ -151,330 +207,411 @@ include '../includes/header.php';
             height: 1px;
             margin: 2rem 0;
         }
+
+        .mobile-tab-bar {
+            background: white;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-tab {
+            transition: all 0.3s ease;
+        }
+
+        .mobile-tab.active {
+            color: var(--yellow-secondary);
+        }
+
+        .mobile-tab.active svg {
+            transform: scale(1.15);
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                order: 2;
+                display: none;
+            }
+
+            .main-content {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 767px) {
+            body {
+                padding-bottom: 80px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .mobile-tab-bar {
+                display: none;
+            }
+
+            body {
+                padding-bottom: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .dashboard-container {
+                padding: 16px;
+                gap: 16px;
+            }
+        }
     </style>
-</head>
-<body class="text-gray-900">
 
 
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
-        
-        <!-- Profile Header Section -->
-        <div class="profile-card rounded-2xl p-6 md:p-8 mb-8">
-            <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
-                <!-- Avatar -->
-                <div class="profile-avatar w-28 h-28 md:w-36 md:h-36 rounded-full flex items-center justify-center text-4xl md:text-5xl font-bold text-white">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Profile Section -->
+            <div class="sidebar-profile">
+                <div class="profile-avatar rounded-full flex items-center justify-center text-4xl font-bold text-white">
                     JD
                 </div>
-                
-                <!-- User Info -->
-                <div class="flex-1 text-center md:text-left">
-                    <h1 class="text-3xl md:text-4xl font-bold mb-2 text-gray-900">John Doe</h1>
-                    <p class="text-gray-600 mb-1 text-lg">Premium Member</p>
-                    <p class="text-gray-500 text-sm">Member since January 2024</p>
-                    
-                    <!-- Desktop Tabs -->
-                    <div class="hidden md:flex gap-8 mt-8 border-b border-gray-200">
-                        <button onclick="switchTab('profile')" class="tab-btn tab-active pb-3 font-semibold transition-all text-lg" data-tab="profile">Profile</button>
-                        <button onclick="switchTab('history')" class="tab-btn pb-3 font-semibold text-gray-500 transition-all text-lg" data-tab="history">Order History</button>
-                        <button onclick="switchTab('settings')" class="tab-btn pb-3 font-semibold text-gray-500 transition-all text-lg" data-tab="settings">Settings</button>
-                    </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-1">John Doe</h2>
+                    <p class="text-sm text-yellow-600 font-semibold">Premium Member</p>
+                    <p class="text-xs text-gray-500 mt-1">Since January 2024</p>
                 </div>
-                
-                <!-- Edit Button -->
-                <button class="btn-primary px-6 py-3 rounded-xl font-semibold text-gray-900 hover:shadow-lg">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        Edit Profile
-                    </span>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
+                <button onclick="switchTab('profile')" class="sidebar-item active w-full" data-sidebar="profile">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span>Dashboard</span>
                 </button>
-            </div>
-        </div>
 
-        <!-- Profile Tab -->
-        <div id="profile-tab" class="tab-content active">
-            <!-- Stats Section -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
-                <div class="stat-card rounded-xl p-6 text-center">
-                    <div class="text-4xl font-bold mb-2 text-yellow-600">42</div>
-                    <div class="text-gray-600 text-sm font-medium">Total Orders</div>
-                </div>
-                <div class="stat-card rounded-xl p-6 text-center">
-                    <div class="text-4xl font-bold mb-2 text-yellow-600">$5,230</div>
-                    <div class="text-gray-600 text-sm font-medium">Total Spent</div>
-                </div>
-                <div class="stat-card rounded-xl p-6 text-center">
-                    <div class="text-4xl font-bold mb-2 text-yellow-600">12</div>
-                    <div class="text-gray-600 text-sm font-medium">Wishlist Items</div>
-                </div>
-                <div class="stat-card rounded-xl p-6 text-center">
-                    <div class="text-4xl font-bold mb-2 text-yellow-600">850</div>
-                    <div class="text-gray-600 text-sm font-medium">Reward Points</div>
-                </div>
-            </div>
+                <a href="../shop/product.php" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <span>Products</span>
+                </a>
 
-            <!-- Personal Information -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="profile-card rounded-2xl p-6 md:p-8">
-                    <h2 class="text-2xl font-bold mb-6 text-gray-900">Personal Information</h2>
-                    <div class="space-y-4">
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Full Name</label>
-                            <p class="text-gray-900 font-semibold text-lg">John Doe</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Email Address</label>
-                            <p class="text-gray-900 font-semibold">john.doe@email.com</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Phone Number</label>
-                            <p class="text-gray-900 font-semibold">+1 (234) 567-8900</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Date of Birth</label>
-                            <p class="text-gray-900 font-semibold">January 15, 1990</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Gender</label>
-                            <p class="text-gray-900 font-semibold">Male</p>
-                        </div>
-                    </div>
-                </div>
+                <button onclick="switchTab('history')" class="sidebar-item w-full" data-sidebar="history">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                    <span>Orders</span>
+                </button>
 
-                <div class="profile-card rounded-2xl p-6 md:p-8">
-                    <h2 class="text-2xl font-bold mb-6 text-gray-900">Shipping Address</h2>
-                    <div class="space-y-4">
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Street Address</label>
-                            <p class="text-gray-900 font-semibold">123 Main Street, Apt 4B</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">City</label>
-                            <p class="text-gray-900 font-semibold">New York</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">State / Province</label>
-                            <p class="text-gray-900 font-semibold">New York</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Postal Code</label>
-                            <p class="text-gray-900 font-semibold">10001</p>
-                        </div>
-                        <div class="info-row py-4">
-                            <label class="text-gray-500 text-sm font-medium block mb-1">Country</label>
-                            <p class="text-gray-900 font-semibold">United States</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <button onclick="switchTab('settings')" class="sidebar-item w-full" data-sidebar="settings">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </nav>
+        </aside>
 
-            <!-- Account Activity -->
-            <div class="profile-card rounded-2xl p-6 md:p-8 mt-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900">Account Activity</h2>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="border-l-4 border-green-500 pl-4">
-                        <p class="text-gray-500 text-sm font-medium mb-1">Last Order</p>
-                        <p class="text-gray-900 font-bold text-lg">October 18, 2024</p>
-                    </div>
-                    <div class="border-l-4 border-blue-500 pl-4">
-                        <p class="text-gray-500 text-sm font-medium mb-1">Last Login</p>
-                        <p class="text-gray-900 font-bold text-lg">October 22, 2024</p>
-                    </div>
-                    <div class="border-l-4 border-purple-500 pl-4">
-                        <p class="text-gray-500 text-sm font-medium mb-1">Account Status</p>
-                        <p class="text-gray-900 font-bold text-lg">Active</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Order History Tab -->
-        <div id="history-tab" class="tab-content">
-            <div class="profile-card rounded-2xl p-6 md:p-8">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900">Order History</h2>
-                <div class="space-y-4">
-                    <!-- Order 1 -->
-                    <div class="order-card rounded-xl p-5 cursor-pointer" onclick="showOrderDetails(1)">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-3 mb-2">
-                                    <span class="font-bold text-gray-900 text-lg">Order #ORD-2024-10-001</span>
-                                    <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">Delivered</span>
-                                </div>
-                                <p class="text-gray-600 mb-1 font-medium">Apple MacBook Pro 16" + 2 more items</p>
-                                <p class="text-gray-500 text-sm">Ordered on October 15, 2024</p>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="text-right">
-                                    <p class="font-bold text-2xl text-yellow-600">$2,899.97</p>
-                                </div>
-                                <button class="px-5 py-2 bg-gray-100 hover:bg-yellow-100 rounded-lg text-sm font-semibold transition-all border border-gray-200">
-                                    View Details
-                                </button>
-                            </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <div id="profile-tab" class="tab-content active">
+                <!-- Welcome Header -->
+                <div class="dashboard-header">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-gray-900">Welcome back, John! 👋</h1>
+                            <p class="text-gray-600">Here's what's happening with your account today.</p>
                         </div>
-                    </div>
-
-                    <!-- Order 2 -->
-                    <div class="order-card rounded-xl p-5 cursor-pointer" onclick="showOrderDetails(2)">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-3 mb-2">
-                                    <span class="font-bold text-gray-900 text-lg">Order #ORD-2024-10-002</span>
-                                    <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">Shipped</span>
-                                </div>
-                                <p class="text-gray-600 mb-1 font-medium">Sony WH-1000XM5 Headphones</p>
-                                <p class="text-gray-500 text-sm">Ordered on October 18, 2024</p>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="text-right">
-                                    <p class="font-bold text-2xl text-yellow-600">$399.99</p>
-                                </div>
-                                <button class="px-5 py-2 bg-gray-100 hover:bg-yellow-100 rounded-lg text-sm font-semibold transition-all border border-gray-200">
-                                    View Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Order 3 -->
-                    <div class="order-card rounded-xl p-5 cursor-pointer" onclick="showOrderDetails(3)">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-3 mb-2">
-                                    <span class="font-bold text-gray-900 text-lg">Order #ORD-2024-09-045</span>
-                                    <span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-semibold">Processing</span>
-                                </div>
-                                <p class="text-gray-600 mb-1 font-medium">Samsung 4K Monitor 32"</p>
-                                <p class="text-gray-500 text-sm">Ordered on September 28, 2024</p>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="text-right">
-                                    <p class="font-bold text-2xl text-yellow-600">$549.99</p>
-                                </div>
-                                <button class="px-5 py-2 bg-gray-100 hover:bg-yellow-100 rounded-lg text-sm font-semibold transition-all border border-gray-200">
-                                    View Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings Tab -->
-        <div id="settings-tab" class="tab-content">
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Account Settings -->
-                <div class="profile-card rounded-2xl p-6 md:p-8">
-                    <h2 class="text-2xl font-bold mb-6 text-gray-900">Account Settings</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between py-3 border-b border-gray-100">
-                            <div>
-                                <p class="font-semibold text-gray-900">Email Notifications</p>
-                                <p class="text-sm text-gray-500">Receive order updates via email</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer">
-                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between py-3 border-b border-gray-100">
-                            <div>
-                                <p class="font-semibold text-gray-900">SMS Notifications</p>
-                                <p class="text-sm text-gray-500">Get delivery alerts via SMS</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer">
-                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between py-3 border-b border-gray-100">
-                            <div>
-                                <p class="font-semibold text-gray-900">Marketing Emails</p>
-                                <p class="text-sm text-gray-500">Receive promotional offers</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer">
-                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between py-3">
-                            <div>
-                                <p class="font-semibold text-gray-900">Two-Factor Authentication</p>
-                                <p class="text-sm text-gray-500">Add extra security to your account</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer">
-                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Security Settings -->
-                <div class="profile-card rounded-2xl p-6 md:p-8">
-                    <h2 class="text-2xl font-bold mb-6 text-gray-900">Security</h2>
-                    <div class="space-y-4">
-                        <button class="w-full text-left p-4 bg-gray-50 hover:bg-yellow-50 rounded-xl transition-all border border-gray-200">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-semibold text-gray-900 mb-1">Change Password</p>
-                                    <p class="text-sm text-gray-500">Update your password regularly</p>
-                                </div>
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        <button class="btn-primary px-6 py-3 rounded-xl font-semibold">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
-                            </div>
-                        </button>
-                        <button class="w-full text-left p-4 bg-gray-50 hover:bg-yellow-50 rounded-xl transition-all border border-gray-200">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-semibold text-gray-900 mb-1">Login History</p>
-                                    <p class="text-sm text-gray-500">View recent account activity</p>
-                                </div>
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </button>
-                        <button class="w-full text-left p-4 bg-gray-50 hover:bg-yellow-50 rounded-xl transition-all border border-gray-200">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-semibold text-gray-900 mb-1">Connected Devices</p>
-                                    <p class="text-sm text-gray-500">Manage devices with access</p>
-                                </div>
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
+                                Edit Profile
+                            </span>
                         </button>
                     </div>
-                    <div class="section-divider"></div>
-                    <button class="w-full p-4 bg-red-50 hover:bg-red-100 text-red-600 font-semibold rounded-xl transition-all border border-red-200">
-                        Delete Account
-                    </button>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
+                    <div class="stat-card rounded-xl p-6 text-center">
+                        <div class="text-4xl font-bold mb-2 text-yellow-600">42</div>
+                        <div class="text-gray-600 text-sm font-medium">Total Orders</div>
+                    </div>
+                    <div class="stat-card rounded-xl p-6 text-center">
+                        <div class="text-4xl font-bold mb-2 text-yellow-600">$5,230</div>
+                        <div class="text-gray-600 text-sm font-medium">Total Spent</div>
+                    </div>
+                    <div class="stat-card rounded-xl p-6 text-center">
+                        <div class="text-4xl font-bold mb-2 text-yellow-600">12</div>
+                        <div class="text-gray-600 text-sm font-medium">Wishlist Items</div>
+                    </div>
+                    <div class="stat-card rounded-xl p-6 text-center">
+                        <div class="text-4xl font-bold mb-2 text-yellow-600">850</div>
+                        <div class="text-gray-600 text-sm font-medium">Reward Points</div>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="profile-card rounded-2xl p-6 md:p-8">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-900">Personal Information</h2>
+                        <div class="space-y-4">
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Full Name</label>
+                                <p class="text-gray-900 font-semibold text-lg">John Doe</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Email Address</label>
+                                <p class="text-gray-900 font-semibold">john.doe@email.com</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Phone Number</label>
+                                <p class="text-gray-900 font-semibold">+1 (234) 567-8900</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Date of Birth</label>
+                                <p class="text-gray-900 font-semibold">January 15, 1990</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Gender</label>
+                                <p class="text-gray-900 font-semibold">Male</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-card rounded-2xl p-6 md:p-8">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-900">Shipping Address</h2>
+                        <div class="space-y-4">
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Street Address</label>
+                                <p class="text-gray-900 font-semibold">123 Main Street, Apt 4B</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">City</label>
+                                <p class="text-gray-900 font-semibold">New York</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">State / Province</label>
+                                <p class="text-gray-900 font-semibold">New York</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Postal Code</label>
+                                <p class="text-gray-900 font-semibold">10001</p>
+                            </div>
+                            <div class="info-row py-4">
+                                <label class="text-gray-500 text-sm font-medium block mb-1">Country</label>
+                                <p class="text-gray-900 font-semibold">United States</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Activity -->
+                <div class="profile-card rounded-2xl p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900">Account Activity</h2>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <p class="text-gray-500 text-sm font-medium mb-1">Last Order</p>
+                            <p class="text-gray-900 font-bold text-lg">October 18, 2024</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <p class="text-gray-500 text-sm font-medium mb-1">Last Login</p>
+                            <p class="text-gray-900 font-bold text-lg">October 22, 2024</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4">
+                            <p class="text-gray-500 text-sm font-medium mb-1">Account Status</p>
+                            <p class="text-gray-900 font-bold text-lg">Active</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Order History Tab -->
+            <div id="history-tab" class="tab-content">
+                <div class="dashboard-header mb-6">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Order History</h1>
+                    <p class="text-gray-600 mt-2">Track and manage all your orders</p>
+                </div>
+
+                <div class="profile-card rounded-2xl p-6 md:p-8">
+                    <div class="space-y-4">
+                        <!-- Order 1 -->
+                        <div class="order-card rounded-xl p-5 cursor-pointer" onclick="showOrderDetails(1)">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="font-bold text-gray-900 text-lg">Order #ORD-2024-10-001</span>
+                                        <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">Delivered</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-1 font-medium">Apple MacBook Pro 16" + 2 more items</p>
+                                    <p class="text-gray-500 text-sm">Ordered on October 15, 2024</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="text-right">
+                                        <p class="font-bold text-2xl text-yellow-600">$2,899.97</p>
+                                    </div>
+                                    <button class="px-5 py-2 bg-gray-100 hover:bg-yellow-100 rounded-lg text-sm font-semibold transition-all border border-gray-200">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 2 -->
+                        <div class="order-card rounded-xl p-5 cursor-pointer" onclick="showOrderDetails(2)">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="font-bold text-gray-900 text-lg">Order #ORD-2024-10-002</span>
+                                        <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">Shipped</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-1 font-medium">Sony WH-1000XM5 Headphones</p>
+                                    <p class="text-gray-500 text-sm">Ordered on October 18, 2024</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="text-right">
+                                        <p class="font-bold text-2xl text-yellow-600">$399.99</p>
+                                    </div>
+                                    <button class="px-5 py-2 bg-gray-100 hover:bg-yellow-100 rounded-lg text-sm font-semibold transition-all border border-gray-200">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 3 -->
+                        <div class="order-card rounded-xl p-5 cursor-pointer" onclick="showOrderDetails(3)">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="font-bold text-gray-900 text-lg">Order #ORD-2024-09-045</span>
+                                        <span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-semibold">Processing</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-1 font-medium">Samsung 4K Monitor 32"</p>
+                                    <p class="text-gray-500 text-sm">Ordered on September 28, 2024</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="text-right">
+                                        <p class="font-bold text-2xl text-yellow-600">$549.99</p>
+                                    </div>
+                                    <button class="px-5 py-2 bg-gray-100 hover:bg-yellow-100 rounded-lg text-sm font-semibold transition-all border border-gray-200">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="dashboard-header mb-6">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Settings</h1>
+                    <p class="text-gray-600 mt-2">Manage your account preferences</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Account Settings -->
+                    <div class="profile-card rounded-2xl p-6 md:p-8">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-900">Notifications</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                                <div>
+                                    <p class="font-semibold text-gray-900">Email Notifications</p>
+                                    <p class="text-sm text-gray-500">Receive order updates via email</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                                <div>
+                                    <p class="font-semibold text-gray-900">SMS Notifications</p>
+                                    <p class="text-sm text-gray-500">Get delivery alerts via SMS</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                                <div>
+                                    <p class="font-semibold text-gray-900">Marketing Emails</p>
+                                    <p class="text-sm text-gray-500">Receive promotional offers</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between py-3">
+                                <div>
+                                    <p class="font-semibold text-gray-900">Two-Factor Authentication</p>
+                                    <p class="text-sm text-gray-500">Add extra security to your account</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="profile-card rounded-2xl p-6 md:p-8">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-900">Security</h2>
+                        <div class="space-y-4">
+                            <button class="w-full text-left p-4 bg-gray-50 hover:bg-yellow-50 rounded-xl transition-all border border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-semibold text-gray-900 mb-1">Change Password</p>
+                                        <p class="text-sm text-gray-500">Update your password regularly</p>
+                                    </div>
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="section-divider"></div>
+                        <button class="w-full p-4 bg-red-50 hover:bg-red-100 text-red-600 font-semibold rounded-xl transition-all border border-red-200">
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Mobile Bottom Tab Bar -->
-    <div class="mobile-tab-bar fixed bottom-0 left-0 right-0 md:hidden z-50">
+    <div class="mobile-tab-bar fixed bottom-0 left-0 right-0 z-50">
         <div class="flex justify-around items-center py-3">
             <button onclick="switchTab('profile')" class="mobile-tab active flex flex-col items-center gap-1" data-mobile-tab="profile">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
-                <span class="text-xs font-medium">Profile</span>
+                <span class="text-xs font-medium">Dashboard</span>
             </button>
+            <a href="../shop/product.php" class="mobile-tab flex flex-col items-center gap-1 text-gray-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                <span class="text-xs font-medium">Products</span>
+            </a>
             <button onclick="switchTab('history')" class="mobile-tab flex flex-col items-center gap-1 text-gray-500" data-mobile-tab="history">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                 </svg>
-                <span class="text-xs font-medium">History</span>
+                <span class="text-xs font-medium">Orders</span>
             </button>
             <button onclick="switchTab('settings')" class="mobile-tab flex flex-col items-center gap-1 text-gray-500" data-mobile-tab="settings">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -573,8 +710,6 @@ include '../includes/header.php';
         </div>
     </div>
 
-
-
     <script>
         function switchTab(tabName) {
             // Hide all tab contents
@@ -585,31 +720,17 @@ include '../includes/header.php';
             // Show selected tab content
             document.getElementById(tabName + '-tab').classList.add('active');
             
-            // Update desktop tab styles
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('tab-active');
-                btn.classList.add('text-gray-500');
-            });
-            
-            const activeDesktopTab = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-            if (activeDesktopTab) {
-                activeDesktopTab.classList.add('tab-active');
-                activeDesktopTab.classList.remove('text-gray-500');
-            }
-            
-            // Update mobile tab styles
-            document.querySelectorAll('.mobile-tab').forEach(btn => {
+            // Update sidebar styles
+            document.querySelectorAll('.sidebar-item').forEach(btn => {
                 btn.classList.remove('active');
-                btn.classList.add('text-gray-500');
             });
             
-            const activeMobileTab = document.querySelector(`.mobile-tab[data-mobile-tab="${tabName}"]`);
-            if (activeMobileTab) {
-                activeMobileTab.classList.add('active');
-                activeMobileTab.classList.remove('text-gray-500');
+            const activeSidebarItem = document.querySelector(`.sidebar-item[data-sidebar="${tabName}"]`);
+            if (activeSidebarItem) {
+                activeSidebarItem.classList.add('active');
             }
             
-            // Scroll to top on mobile
+            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -734,5 +855,3 @@ include '../includes/header.php';
             }
         });
     </script>
-    <!-- Footer Placeholder -->
-    <?php include '../includes/footer.php'; ?>
